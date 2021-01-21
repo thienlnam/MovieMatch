@@ -11,16 +11,16 @@ import ButtonActions from './ButtonActions';
 export default function MovieModal(props: any) {
     const deviceWidth = useWindowDimensions().width;
     const deviceHeight = useWindowDimensions().height;
+    const image = {uri: props.image};
     return (
         <Modal 
-            propagateSwipe
             isVisible={props.isVisible}
             style={styles.modal}
         >
         <SafeAreaView style={styles.innerModal}>
             <View style={{zIndex: 1}}>
                 <ImageBackground
-                    source={props.image}
+                    source={image}
                     resizeMode='contain'
                     style={{width: deviceWidth, height: deviceHeight/2.5}}
                 >

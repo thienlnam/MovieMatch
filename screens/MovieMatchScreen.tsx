@@ -4,6 +4,7 @@ import { StyleSheet, SafeAreaView, useWindowDimensions, View, Text } from 'react
 import HeaderBar from '../components/HeaderBar';
 import MovieCard from '../components/MovieCard';
 import ButtonActions from '../components/ButtonActions';
+import MovieModal from '../components/MovieModal';
 
 import Swiper from 'react-native-deck-swiper';
 
@@ -46,18 +47,31 @@ const sampleMovieData = [
   },
 ];
 
-export default function MovieMatchScreen() {
+const MovieMatchScreen = ({navigation}) => {
+  const [isModalVisible, setModalVisibility] = useState(false);
+  const [currrentMovieData, setCurrentMovieData] = useState(sampleMovieData[0]);
+
+  const openModal = () => {
+    setModalVisibility(true);
+  }
+
   return (
     <View style={styles.container}>
       <SafeAreaView style={styles.container}>
-          <HeaderBar />
-          <View style={{flex: 1, zIndex: 1}}>
+          <HeaderBar navigation={navigation} />
+          <View style={{flex: 1}}>
             <Swiper
+              horizontalSwipe={!isModalVisible}
+              verticalSwipe={!isModalVisible}
               backgroundColor={'#FFFFFF'}
               cards={sampleMovieData}
+              onSwiped={(index) => {
+                setCurrentMovieData(sampleMovieData[index + 1]);
+              }}
               renderCard={(movie) => {
                 return (
                   <MovieCard 
+                    openModal={openModal}
                     title={movie.title} 
                     image={movie.coverURL} 
                     genres={movie.genres} 
@@ -69,7 +83,9 @@ export default function MovieMatchScreen() {
                 )
               }}
               cardVerticalMargin={0}
+              cardHorizontalMargin={0}
               stackSize={3}
+              stackSeparation={15}
               overlayLabels={overlayLabels}
               animateOverlayLabelsOpacity
               animateCardOpacity
@@ -80,6 +96,17 @@ export default function MovieMatchScreen() {
             <ButtonActions />
           </View>
       </SafeAreaView>
+      <MovieModal 
+        isVisible={isModalVisible} 
+        hideModal={() => setModalVisibility(false)} 
+        image={currrentMovieData.coverURL}
+        title={currrentMovieData.title}
+        genres={currrentMovieData.genres}
+        rating={currrentMovieData.rating}
+        dateReleased={currrentMovieData.dateReleased}
+        language={currrentMovieData.language}
+        description={currrentMovieData.description}
+      />
     </View>
   );
 }
@@ -88,6 +115,9 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
+  buttonContainer: {
+    backgroundColor: 'white',
+  }
 });
 
 const overlayLabels = {
@@ -162,3 +192,5 @@ const overlayLabels = {
     }
   }
 };
+
+export default MovieMatchScreen;

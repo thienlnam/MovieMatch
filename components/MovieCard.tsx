@@ -11,31 +11,18 @@ const image = {uri: "https://images-na.ssl-images-amazon.com/images/I/91WNnQZdyb
 export default function MovieCard(props: any) {
     const imageWidth = useWindowDimensions().width - 12;
     const imageHeight = useWindowDimensions().height - 280;
-
-    const [isModalVisible, setModalVisibility] = useState(false);
     const image = {uri: props.image};
 
     return (
       <View style={styles.container}>
         <View style={styles.imageContainer}>
-            <Pressable onPress={() => setModalVisibility(true)}>
+            <Pressable onPress={props.openModal}>
             <Image 
                 source={image}
-                style={{borderRadius: 8, width: imageWidth, height: 480, transform: [{scale: 1}]}}
+                style={{borderRadius: 8, width: imageWidth, height: '87%', transform: [{scale: 1}]}}
             />
             </Pressable>
         </View>
-        <MovieModal 
-            isVisible={isModalVisible} 
-            hideModal={() => setModalVisibility(false)} 
-            image={image}
-            title={props.title}
-            genres={props.genres}
-            rating={props.rating}
-            dateReleased={props.dateReleased}
-            language={props.language}
-            description={props.description}
-        />
       </View>
     );
 }

@@ -48,7 +48,7 @@ export default function ButtonActions(props: any) {
 const styles = StyleSheet.create({
     iconContainer: {
         marginHorizontal: 10,
-        backgroundColor: 'transparent',
+        backgroundColor: 'white',
         flexDirection: 'row',
         borderColor: '#F0F0F0', 
         borderWidth: 1, 
