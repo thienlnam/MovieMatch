@@ -11,13 +11,13 @@ const image = {uri: "https://images-na.ssl-images-amazon.com/images/I/91WNnQZdyb
 export default function MovieCard(props: any) {
     const imageWidth = useWindowDimensions().width - 12;
     const imageHeight = useWindowDimensions().height - 280;
-    const image = {uri: props.image};
+    const image = {uri: `https://image.tmdb.org/t/p/w500${props.image}`};
 
     return (
       <View style={styles.container}>
         <View style={styles.imageContainer}>
             <Pressable onPress={props.openModal}>
-            <Image 
+            <Image
                 source={image}
                 style={{borderRadius: 8, width: imageWidth, height: '87%', transform: [{scale: 1}]}}
             />

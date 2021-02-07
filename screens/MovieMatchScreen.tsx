@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import { StyleSheet, SafeAreaView, useWindowDimensions, View, Text } from 'react-native';
 
 import HeaderBar from '../components/HeaderBar';
@@ -49,7 +49,39 @@ const sampleMovieData = [
 
 const MovieMatchScreen = ({navigation}) => {
   const [isModalVisible, setModalVisibility] = useState(false);
-  const [currrentMovieData, setCurrentMovieData] = useState(sampleMovieData[0]);
+  const [currentMovieData, setCurrentMovieData] = useState({});
+  const [movieData, setMovieData] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [isError, setIsError] = useState(false);
+
+  const handleSwipe = async () => {
+
+  };
+
+  useEffect(() => {
+    const getMovies = async () => {
+      let responseBody = [];
+      setIsLoading(true);
+      setIsError(false);
+      try {
+        const res = await fetch(`http://localhost:8080/movies`);
+        responseBody = await res.json();
+      } catch (e) {
+        if (e instanceof DOMException) {
+          console.log("HTTP request aborted");
+        } else {
+          setIsError(true);
+          console.log(e);
+        }
+      }
+
+      setMovieData(responseBody || []);
+      setCurrentMovieData(responseBody[0]);
+      setIsLoading(false);
+    };
+
+    getMovies();
+  }, []);
 
   const openModal = () => {
     setModalVisibility(true);
@@ -64,21 +96,18 @@ const MovieMatchScreen = ({navigation}) => {
               horizontalSwipe={!isModalVisible}
               verticalSwipe={!isModalVisible}
               backgroundColor={'#FFFFFF'}
-              cards={sampleMovieData}
+              cards={movieData}
               onSwiped={(index) => {
-                setCurrentMovieData(sampleMovieData[index + 1]);
+                console.log(index);
+                setCurrentMovieData(movieData[index + 1]);
               }}
               renderCard={(movie) => {
                 return (
-                  <MovieCard 
+                  isLoading || movieData.length < 1
+                  ? <Text>Loading...</Text> 
+                  : <MovieCard 
                     openModal={openModal}
-                    title={movie.title} 
-                    image={movie.coverURL} 
-                    genres={movie.genres} 
-                    rating={movie.rating} 
-                    dateReleased={movie.dateReleased} 
-                    language={movie.language} 
-                    description={movie.description}
+                    image={movie.posterPath}
                   />
                 )
               }}
@@ -96,16 +125,10 @@ const MovieMatchScreen = ({navigation}) => {
             <ButtonActions />
           </View>
       </SafeAreaView>
-      <MovieModal 
+      <MovieModal
         isVisible={isModalVisible} 
-        hideModal={() => setModalVisibility(false)} 
-        image={currrentMovieData.coverURL}
-        title={currrentMovieData.title}
-        genres={currrentMovieData.genres}
-        rating={currrentMovieData.rating}
-        dateReleased={currrentMovieData.dateReleased}
-        language={currrentMovieData.language}
-        description={currrentMovieData.description}
+        hideModal={() => setModalVisibility(false)}
+        movie={currentMovieData}
       />
     </View>
   );

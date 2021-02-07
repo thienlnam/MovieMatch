@@ -1,6 +1,7 @@
 import  * as React from 'react';
 import { StyleSheet, ImageBackground, useWindowDimensions, SafeAreaView, ScrollView, Pressable, View, Text } from 'react-native';
 import Modal from 'react-native-modal';
+import moment from 'moment';
 
 import Colors from '../constants/Colors';
 import { AntDesign } from '@expo/vector-icons';
@@ -9,9 +10,10 @@ import ButtonActions from './ButtonActions';
 
 
 export default function MovieModal(props: any) {
+    const movie = props.movie;
     const deviceWidth = useWindowDimensions().width;
     const deviceHeight = useWindowDimensions().height;
-    const image = {uri: props.image};
+    const image = {uri: `https://image.tmdb.org/t/p/w500${movie.posterPath}`};
     return (
         <Modal 
             isVisible={props.isVisible}
@@ -22,7 +24,7 @@ export default function MovieModal(props: any) {
                 <ImageBackground
                     source={image}
                     resizeMode='contain'
-                    style={{width: deviceWidth, height: deviceHeight/2.5}}
+                    style={{width: deviceWidth, height: deviceHeight / 2.5}}
                 >
                
                 <Pressable onPress={props.hideModal} style={styles.closeIconContainer}>
@@ -31,16 +33,16 @@ export default function MovieModal(props: any) {
                 </ImageBackground>
             </View>
             <View style={styles.movieDetailsContainer}>
-                <Text style={styles.movieTitle}>{props.title}</Text>
-                <MovieDetailLine icon="rating" text={props.rating} />
+                <Text style={styles.movieTitle}>{movie.title}</Text>
+                <MovieDetailLine icon="rating" text={movie.rating} />
                 <MovieDetailLine icon="genre" text={props.genres} />
-                <MovieDetailLine icon="date" text={props.dateReleased} />
-                <MovieDetailLine icon="language" text={props.language} />
+                <MovieDetailLine icon="date" text={moment(movie.releaseDate).format('MM/DD/YYYY')} />
+                <MovieDetailLine icon="language" text={movie.originalLanguage} />
                 <View
                     style={styles.horizontalLine}
                 />
                 <ScrollView style={styles.overviewContainer}>
-                    <Text style={styles.overviewText}>{props.description}</Text>
+                    <Text style={styles.overviewText}>{movie.overview}</Text>
                 </ScrollView>
             </View>
             <View style={styles.actionButtonContainer}>
