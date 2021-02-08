@@ -12,7 +12,7 @@ const SignInScreen = () => {
     // Request
     const [request, response, promptAsync] = useAuthRequest(
       {
-        clientId: '0oa5d7nb2fpNN2oDI5d6',
+        clientId: 'CLIENT_ID',
         scopes: ['openid', 'profile'],
         // For usage in managed apps using the proxy
         redirectUri: makeRedirectUri({
